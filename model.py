@@ -10,7 +10,7 @@ class SOFT(nn.Module):
         super(SOFT, self).__init__()
         self.USE_CUDA = USE_CUDA
         self.input_shape = input_shape
-        self.input_shape2 = int(input_shape / 2)
+        self.input_shape2 = input_shape//2
         self.nClass = nClass
         self.act = nn.ReLU()
         self.mask_weight = nn.Parameter(torch.from_numpy(np.random.normal(loc=0.0, scale=0.01, size=[input_shape, input_shape])).float() )
@@ -18,6 +18,12 @@ class SOFT(nn.Module):
         self.score_cl = nn.Linear(self.input_shape2, self.nClass)
         self.gcn1 = nn.Linear(self.input_shape, self.input_shape)
         self.gcn2 = nn.Linear(self.input_shape, self.input_shape)
+
+        self.fc_pool = nn.Sequential(
+            nn.Linear(self.input_shape, self.input_shape2, False),
+            nn.ReLU(),
+            nn.Linear(self.input_shape2, self.input_shape, False)
+            )
 
 
     def apply_bn(self, x):
